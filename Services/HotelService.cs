@@ -13,7 +13,28 @@ public class HotelService : IHotelService
             _hotelRepository = hotelRepository;
             _bookingRepository = bookingRepository;
         }
-
+            
+        public List<Hotel> GetAllHotels()
+        {
+            return _hotelRepository.GetAll().ToList();
+        }
+        
+        public Hotel GetHotelById(string hotelId)
+        {
+            // Используем репозиторий для получения информации об отеле по его идентификатору
+            return _hotelRepository.GetById(hotelId);
+        }
+        
+        public List<Hotel> GetHotelsByName(string name)
+        {
+            return _hotelRepository.GetHotelsByName(name);
+        }
+        
+        public List<Hotel> GetHotelsContainingName(string name)
+        {
+            return _hotelRepository.GetHotelsContainingName(name);
+        }
+        
         public List<Hotel> SearchHotels(SearchCriteria criteria)
         {
             // Реализация поиска отелей по критериям
