@@ -66,8 +66,8 @@ namespace hotel_booking_service.Controllers
         }
 
         // Метод для поиска отелей по критериям
-        [HttpGet("Search")]
-        public IActionResult SearchHotels(SearchCriteria criteria)
+        [HttpPost("Search")]
+        public IActionResult SearchHotels([FromBody] SearchCriteria criteria)
         {
             var hotels = _hotelService.SearchHotels(criteria);
             return Ok(hotels);
