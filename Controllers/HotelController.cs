@@ -18,7 +18,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("GetAllHotels")]
         public IActionResult GetAllHotels()
         {
-            var hotels = _hotelManagementService.GetAllHotels();
+            var hotels = _hotelService.GetAllHotels();
             if (hotels != null && hotels.Count > 0)
                 return Ok(hotels);
             else
@@ -29,7 +29,7 @@ namespace hotel_booking_service.Controllers
         public IActionResult GetHotel([FromQuery] string hotelId)
         {
             // Получаем информацию об отеле по его идентификатору с помощью сервиса
-            var hotel = _hotelManagementService.GetHotelById(hotelId);
+            var hotel = _hotelService.GetHotelById(hotelId);
 
             // Проверяем, был ли найден отель
             if (hotel == null)
@@ -41,26 +41,10 @@ namespace hotel_booking_service.Controllers
             return Ok(hotel);
         }
 
-        [HttpGet("GetRoomsByHotelId")]
-        public IActionResult GetRoomsByHotelId(string hotelId)
-        {
-            // Получаем список комнат отеля по его идентификатору с помощью сервиса
-            var rooms = _hotelManagementService.GetRoomsByHotelId(hotelId);
-
-            // Проверяем, были ли найдены комнаты
-            if (rooms == null || !rooms.Any())
-            {
-                return NotFound("Rooms not found for the specified hotel.");
-            }
-
-            // Возвращаем список комнат в виде ответа
-            return Ok(rooms);
-        }
-
         [HttpGet("GetHotelsByName")]
         public IActionResult GetHotelsByName(string name)
         {
-            var hotels = _hotelManagementService.GetHotelsByName(name);
+            var hotels = _hotelService.GetHotelsByName(name);
             if (hotels != null && hotels.Count > 0)
                 return Ok(hotels);
             else
@@ -70,7 +54,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("GetHotelsContainingName")]
         public IActionResult GetHotelsContainingName(string name)
         {
-            var hotels = _hotelManagementService.GetHotelsContainingName(name);
+            var hotels = _hotelService.GetHotelsContainingName(name);
             if (hotels.Any())
             {
                 return Ok(hotels);
