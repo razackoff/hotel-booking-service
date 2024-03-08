@@ -58,7 +58,7 @@ public class HotelRepository : IHotelRepository
     {
         // Ваша реализация поиска отелей по критериям
         // Пример: возвращаем список отелей, где имя отеля содержит указанный текст
-        return _context.Hotels.Where(h => h.Name.Contains(criteria.City)).ToList();
+        return _context.Hotels.Where(h => h.City.Contains(criteria.City)).ToList();
     }
 
     public Room GetRoomById(string roomId)
