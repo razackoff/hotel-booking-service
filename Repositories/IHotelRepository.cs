@@ -11,7 +11,5 @@ public interface IHotelRepository
     void Add(Hotel hotel);
     void Update(Hotel hotel);
     void Delete(Hotel hotel);
-    List<Hotel> SearchHotels(SearchCriteria criteria);
-    Room GetRoomById(string roomId);
     List<Booking> GetBookings(string userId);
 }
