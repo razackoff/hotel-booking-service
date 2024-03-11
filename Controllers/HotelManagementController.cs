@@ -1,12 +1,13 @@
 using hotel_booking_service.DTOs;
 using hotel_booking_service.Models;
 using hotel_booking_service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hotel_booking_service.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/v1/[controller]")]
 public class HotelManagementController : ControllerBase
 {
     private readonly IHotelManagementService _hotelManagementService;
@@ -15,7 +16,7 @@ public class HotelManagementController : ControllerBase
     {
         _hotelManagementService = hotelManagementService;
     }
-    
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetAllHotels")]
     public IActionResult GetAllHotels()
     {
@@ -26,6 +27,7 @@ public class HotelManagementController : ControllerBase
             return NotFound("No hotels found.");
     }
     
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelById")]
     public IActionResult GetHotel([FromQuery] string hotelId)
     {
@@ -42,6 +44,7 @@ public class HotelManagementController : ControllerBase
         return Ok(hotel);
     }
     
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetRoomsByHotelId")]
     public IActionResult GetRoomsByHotelId(string hotelId)
     {
@@ -58,6 +61,7 @@ public class HotelManagementController : ControllerBase
         return Ok(rooms);
     }
     
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelsByName")]
     public IActionResult GetHotelsByName(string name)
     {
@@ -68,6 +72,7 @@ public class HotelManagementController : ControllerBase
             return NotFound("Hotels not found by name.");
     }
     
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelsContainingName")]
     public IActionResult GetHotelsContainingName(string name)
     {
@@ -82,6 +87,7 @@ public class HotelManagementController : ControllerBase
         }
     }
     
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpPost("AddHotel")]
     public IActionResult AddHotel(HotelDto hotelDto)
     {
@@ -103,6 +109,7 @@ public class HotelManagementController : ControllerBase
             return BadRequest("Failed to add hotel.");
     }
 
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpPost("AddRoom")]
     public IActionResult AddRoom([FromQuery] string hotelId, [FromBody] RoomDto roomDto)
     {
@@ -119,6 +126,7 @@ public class HotelManagementController : ControllerBase
             return BadRequest("Failed to add room to hotel.");
     }
 
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpPut("UpdateHotel")]
     public IActionResult UpdateHotel([FromQuery] string hotelId, [FromBody] HotelUpdateDto hotelDto)
     {
@@ -137,6 +145,7 @@ public class HotelManagementController : ControllerBase
             return BadRequest("Failed to update hotel.");
     }
 
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpDelete("RemoveHotel")]
     public IActionResult RemoveHotel([FromQuery] string hotelId)
     {
@@ -147,6 +156,7 @@ public class HotelManagementController : ControllerBase
             return NotFound("Hotel not found or removal failed.");
     }
 
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpPut("UpdateRoomAvailability")]
     public IActionResult UpdateRoomAvailability([FromQuery] string roomId, [FromQuery] bool available)
     {
@@ -157,6 +167,7 @@ public class HotelManagementController : ControllerBase
             return BadRequest("Failed to update room availability.");
     }
 
+    //[Authorize(Roles = "Admin, Manager")]
     [HttpPut("UpdateRoomPrice")]
     public IActionResult UpdateRoomPrice([FromQuery] string roomId, [FromQuery] decimal price)
     {

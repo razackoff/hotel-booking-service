@@ -1,3 +1,4 @@
+using hotel_booking_service.DTOs;
 using hotel_booking_service.Models;
 using hotel_booking_service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hotel_booking_service.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/v1/[controller]")]
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
@@ -15,15 +16,15 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
 
-    [HttpGet]
+    [HttpGet("GetAllBookings")]
     public IActionResult GetAllBookings()
     {
         var bookings = _bookingService.GetAllBookings();
         return Ok(bookings);
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetBookingById(string id)
+    [HttpGet("GetBookingById")]
+    public IActionResult GetBookingById([FromQuery] string id)
     {
         var booking = _bookingService.GetBookingById(id);
         if (booking != null)
@@ -32,22 +33,38 @@ public class BookingController : ControllerBase
             return NotFound("Booking not found.");
     }
 
-    [HttpPost]
-    public IActionResult AddBooking(Booking booking)
+    [HttpPost("AddBooking")]
+    public IActionResult AddBooking([FromBody] BookingDto bookingDto)
     {
+        // Преобразование DTO в объект бронирования
+        var booking = new Booking
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = bookingDto.UserId,
+            RoomId = bookingDto.RoomId,
+        };
+        
         _bookingService.AddBooking(booking);
+        
         return Ok("Booking added successfully.");
     }
 
-    [HttpPut("{id}")]
-    public IActionResult UpdateBooking(int id, Booking booking)
+    [HttpPut("UpdateBooking")]
+    public IActionResult UpdateBooking([FromQuery] string id,[FromBody] BookingDto bookingDto)
     {
+        var booking = new Booking
+        {
+            Id = id,
+            UserId = bookingDto.UserId,
+            RoomId = bookingDto.RoomId,
+        };
+        
         _bookingService.UpdateBooking(booking);
         return Ok("Booking updated successfully.");
     }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteBooking(string id)
+    [HttpDelete("DeleteBooking")]
+    public IActionResult DeleteBooking([FromQuery] string id)
     {
         _bookingService.DeleteBooking(id);
         return Ok("Booking deleted successfully.");

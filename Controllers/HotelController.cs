@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hotel_booking_service.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class HotelController : ControllerBase
     {
         private readonly IHotelService _hotelService;
@@ -65,14 +65,32 @@ namespace hotel_booking_service.Controllers
             }
         }
 
+        [HttpGet("GetAvailableRooms")]
+        public IActionResult GetAvailableRooms([FromQuery] string hotelId)
+        {
+            var availableRooms = _hotelService.GetAvailableRooms(hotelId);
+            if (availableRooms != null)
+                return Ok(availableRooms);
+            else
+                return NotFound($"No available rooms found for hotel with ID: {hotelId}");
+        }
+        
+        // Метод для получения всех бронирований пользователя
+        [HttpGet("Bookings")]
+        public IActionResult GetBookings([FromQuery] string userId)
+        {
+            var bookings = _hotelService.GetBookings(userId);
+            return Ok(bookings);
+        }
+        
         // Метод для поиска отелей по критериям
-        [HttpPost("Search")]
+        [HttpPost("FindAvailableRooms")]
         public IActionResult SearchHotels([FromBody] SearchCriteria criteria)
         {
-            var hotels = _hotelService.SearchHotels(criteria);
-            return Ok(hotels);
+            var rooms = _hotelService.FindAvailableRooms(criteria);
+            return Ok(rooms);
         }
-
+        
         // Метод для бронирования комнаты
         [HttpPost("Book")]
         public IActionResult BookRoom(RoomBookingInfo bookingInfo)
@@ -85,22 +103,14 @@ namespace hotel_booking_service.Controllers
         }
 
         // Метод для отмены бронирования
-        [HttpDelete("Cancel/{bookingId}")]
-        public IActionResult CancelBooking(string bookingId)
+        [HttpDelete("Cancel")]
+        public IActionResult CancelBooking([FromQuery] string bookingId)
         {
             var success = _hotelService.CancelBooking(bookingId);
             if (success)
                 return Ok("Booking canceled successfully.");
             else
                 return NotFound("Booking not found or cancellation failed.");
-        }
-
-        // Метод для получения всех бронирований пользователя
-        [HttpGet("Bookings/{userId}")]
-        public IActionResult GetBookings(string userId)
-        {
-            var bookings = _hotelService.GetBookings(userId);
-            return Ok(bookings);
         }
     }
 }
