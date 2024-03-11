@@ -1,5 +1,6 @@
 using hotel_booking_service.Models;
 using hotel_booking_service.Repositories;
+using Serilog;
 
 namespace hotel_booking_service.Services;
 
@@ -7,11 +8,16 @@ public class HotelService : IHotelService
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly Serilog.ILogger _logger;
 
-        public HotelService(IHotelRepository hotelRepository, IBookingRepository bookingRepository)
+        public HotelService(IHotelRepository hotelRepository, IBookingRepository bookingRepository,
+            IRoomRepository roomRepository)
         {
             _hotelRepository = hotelRepository;
             _bookingRepository = bookingRepository;
+            _roomRepository = roomRepository;
+            _logger = Log.Logger;
         }
             
         public List<Hotel> GetAllHotels()
@@ -35,10 +41,16 @@ public class HotelService : IHotelService
             return _hotelRepository.GetHotelsContainingName(name);
         }
         
-        public List<Hotel> SearchHotels(SearchCriteria criteria)
+        public List<Room> FindAvailableRooms(SearchCriteria criteria)
         {
             // Реализация поиска отелей по критериям
-            return _hotelRepository.SearchHotels(criteria);
+            return _roomRepository.FindAvailableRooms(criteria);
+        }
+        
+        public List<Room> GetAvailableRooms(string hotelId)
+        {
+            // Предположим, что у вас есть метод в репозитории, который возвращает список доступных комнат для отеля по его идентификатору
+            return _roomRepository.GetAvailableRoomsByHotelId(hotelId);
         }
 
         public bool BookRoom(RoomBookingInfo bookingInfo)
@@ -46,7 +58,7 @@ public class HotelService : IHotelService
             try
             {
                 // Проверка доступности номера
-                var room = _hotelRepository.GetRoomById(bookingInfo.RoomId);
+                var room = _roomRepository.GetById(bookingInfo.RoomId);
                 if (room == null || !room.IsAvailable)
                     return false;
 
@@ -60,12 +72,15 @@ public class HotelService : IHotelService
                     // Другие свойства бронирования
                 };
 
+                booking.Id = Guid.NewGuid().ToString();
+                
                 // Добавление бронирования в базу данных
                 _bookingRepository.Add(booking);
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Error(ex.ToString(), "Error occurred while adding hotel");
                 return false;
             }
         }

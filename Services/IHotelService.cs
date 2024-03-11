@@ -8,7 +8,8 @@ public interface IHotelService
     Hotel GetHotelById(string hotelId);  
     List<Hotel> GetHotelsByName(string name);
     List<Hotel> GetHotelsContainingName(string name);
-    List<Hotel> SearchHotels(SearchCriteria criteria);
+    List<Room> FindAvailableRooms(SearchCriteria criteria);
+    List<Room> GetAvailableRooms(string hotelId);
     bool BookRoom(RoomBookingInfo bookingInfo);
     bool CancelBooking(string bookingId);
     List<Booking> GetBookings(string userId);
