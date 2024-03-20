@@ -15,7 +15,6 @@ Log.Logger = new LoggerConfiguration()
 var builder = WebApplication.CreateBuilder(args);
 
 string dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST")!;
-string dbPort = Environment.GetEnvironmentVariable("DATABASE_PORT")!;
 string dbName = Environment.GetEnvironmentVariable("DATABASE_NAME")!;
 string dbUser = Environment.GetEnvironmentVariable("DATABASE_USER")!;
 string dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD")!;
