@@ -7,26 +7,19 @@ namespace hotel_booking_service.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class BookingController : ControllerBase
+public class BookingController(IBookingService bookingService) : ControllerBase
 {
-    private readonly IBookingService _bookingService;
-
-    public BookingController(IBookingService bookingService)
-    {
-        _bookingService = bookingService;
-    }
-
     [HttpGet("GetAllBookings")]
     public IActionResult GetAllBookings()
     {
-        var bookings = _bookingService.GetAllBookings();
+        var bookings = bookingService.GetAllBookings();
         return Ok(bookings);
     }
 
     [HttpGet("GetBookingById")]
     public IActionResult GetBookingById([FromQuery] string id)
     {
-        var booking = _bookingService.GetBookingById(id);
+        var booking = bookingService.GetBookingById(id);
         if (booking != null)
             return Ok(booking);
         else
@@ -44,7 +37,7 @@ public class BookingController : ControllerBase
             RoomId = bookingDto.RoomId,
         };
         
-        _bookingService.AddBooking(booking);
+        bookingService.AddBooking(booking);
         
         return Ok("Booking added successfully.");
     }
@@ -59,14 +52,14 @@ public class BookingController : ControllerBase
             RoomId = bookingDto.RoomId,
         };
         
-        _bookingService.UpdateBooking(booking);
+        bookingService.UpdateBooking(booking);
         return Ok("Booking updated successfully.");
     }
 
     [HttpDelete("DeleteBooking")]
     public IActionResult DeleteBooking([FromQuery] string id)
     {
-        _bookingService.DeleteBooking(id);
+        bookingService.DeleteBooking(id);
         return Ok("Booking deleted successfully.");
     }
 }

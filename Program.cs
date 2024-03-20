@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using hotel_booking_service.Data;
 using hotel_booking_service.Repositories;
@@ -15,18 +14,20 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-string dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
-string dbPort = Environment.GetEnvironmentVariable("DATABASE_PORT");
-string dbName = Environment.GetEnvironmentVariable("DATABASE_NAME");
-string dbUser = Environment.GetEnvironmentVariable("DATABASE_USER");
-string dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+string dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST")!;
+string dbPort = Environment.GetEnvironmentVariable("DATABASE_PORT")!;
+string dbName = Environment.GetEnvironmentVariable("DATABASE_NAME")!;
+string dbUser = Environment.GetEnvironmentVariable("DATABASE_USER")!;
+string dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD")!;
 
-string connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword};";
+string connectionString = $"Host={dbHost};Database={dbName};Username={dbUser};Password={dbPassword};";
 //string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
 
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -89,13 +90,12 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-/*// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-}*/
-
-app.UseSwagger(); 
-app.UseSwaggerUI();
+//Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 app.MapControllers();

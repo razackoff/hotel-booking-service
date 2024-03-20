@@ -6,33 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace hotel_booking_service.Controllers;
 
+//[Authorize(Roles = "Admin, Manager")]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class HotelManagementController : ControllerBase
+public class HotelManagementController(IHotelManagementService hotelManagementService) : ControllerBase
 {
-    private readonly IHotelManagementService _hotelManagementService;
-
-    public HotelManagementController(IHotelManagementService hotelManagementService)
-    {
-        _hotelManagementService = hotelManagementService;
-    }
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetAllHotels")]
     public IActionResult GetAllHotels()
     {
-        var hotels = _hotelManagementService.GetAllHotels();
-        if (hotels != null && hotels.Count > 0)
+        var hotels = hotelManagementService.GetAllHotels();
+        if (hotels.Count > 0)
             return Ok(hotels);
         else
             return NotFound("No hotels found.");
     }
     
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelById")]
     public IActionResult GetHotel([FromQuery] string hotelId)
     {
         // Получаем информацию об отеле по его идентификатору с помощью сервиса
-        var hotel = _hotelManagementService.GetHotelById(hotelId);
+        var hotel = hotelManagementService.GetHotelById(hotelId);
 
         // Проверяем, был ли найден отель
         if (hotel == null)
@@ -44,12 +37,11 @@ public class HotelManagementController : ControllerBase
         return Ok(hotel);
     }
     
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetRoomsByHotelId")]
     public IActionResult GetRoomsByHotelId(string hotelId)
     {
         // Получаем список комнат отеля по его идентификатору с помощью сервиса
-        var rooms = _hotelManagementService.GetRoomsByHotelId(hotelId);
+        var rooms = hotelManagementService.GetRoomsByHotelId(hotelId);
 
         // Проверяем, были ли найдены комнаты
         if (rooms == null || !rooms.Any())
@@ -61,22 +53,20 @@ public class HotelManagementController : ControllerBase
         return Ok(rooms);
     }
     
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelsByName")]
     public IActionResult GetHotelsByName(string name)
     {
-        var hotels = _hotelManagementService.GetHotelsByName(name);
+        var hotels = hotelManagementService.GetHotelsByName(name);
         if (hotels != null && hotels.Count > 0)
             return Ok(hotels);
         else
             return NotFound("Hotels not found by name.");
     }
     
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpGet("GetHotelsContainingName")]
     public IActionResult GetHotelsContainingName(string name)
     {
-        var hotels = _hotelManagementService.GetHotelsContainingName(name);
+        var hotels = hotelManagementService.GetHotelsContainingName(name);
         if (hotels.Any())
         {
             return Ok(hotels);
@@ -87,7 +77,6 @@ public class HotelManagementController : ControllerBase
         }
     }
     
-    //[Authorize(Roles = "Admin, Manager")]
     [HttpPost("AddHotel")]
     public IActionResult AddHotel(HotelDto hotelDto)
     {
@@ -102,14 +91,13 @@ public class HotelManagementController : ControllerBase
 
         hotel.Id = Guid.NewGuid().ToString();
 
-        var success = _hotelManagementService.AddHotel(hotel);
+        var success = hotelManagementService.AddHotel(hotel);
         if (success)
             return Ok("Hotel added successfully.");
         else
             return BadRequest("Failed to add hotel.");
     }
-
-    //[Authorize(Roles = "Admin, Manager")]
+    
     [HttpPost("AddRoom")]
     public IActionResult AddRoom([FromQuery] string hotelId, [FromBody] RoomDto roomDto)
     {
@@ -119,14 +107,13 @@ public class HotelManagementController : ControllerBase
         room.Id = Guid.NewGuid().ToString();
         room.HotelId = hotelId;
 
-        var success = _hotelManagementService.AddRoom(room);
+        var success = hotelManagementService.AddRoom(room);
         if (success)
             return Ok("Room added to hotel successfully.");
         else
             return BadRequest("Failed to add room to hotel.");
     }
-
-    //[Authorize(Roles = "Admin, Manager")]
+    
     [HttpPut("UpdateHotel")]
     public IActionResult UpdateHotel([FromQuery] string hotelId, [FromBody] HotelUpdateDto hotelDto)
     {
@@ -138,40 +125,37 @@ public class HotelManagementController : ControllerBase
             City = hotelDto.City,
             Description = hotelDto.Description
         };
-        var success = _hotelManagementService.UpdateHotel(hotelId, hotel);
+        var success = hotelManagementService.UpdateHotel(hotelId, hotel);
         if (success)
             return Ok("Hotel updated successfully.");
         else
             return BadRequest("Failed to update hotel.");
     }
-
-    //[Authorize(Roles = "Admin, Manager")]
+    
     [HttpDelete("RemoveHotel")]
     public IActionResult RemoveHotel([FromQuery] string hotelId)
     {
-        var success = _hotelManagementService.RemoveHotel(hotelId);
+        var success = hotelManagementService.RemoveHotel(hotelId);
         if (success)
             return Ok("Hotel removed successfully.");
         else
             return NotFound("Hotel not found or removal failed.");
     }
-
-    //[Authorize(Roles = "Admin, Manager")]
+    
     [HttpPut("UpdateRoomAvailability")]
     public IActionResult UpdateRoomAvailability([FromQuery] string roomId, [FromQuery] bool available)
     {
-        var success = _hotelManagementService.UpdateRoomAvailability(roomId, available);
+        var success = hotelManagementService.UpdateRoomAvailability(roomId, available);
         if (success)
             return Ok("Room availability updated successfully.");
         else
             return BadRequest("Failed to update room availability.");
     }
-
-    //[Authorize(Roles = "Admin, Manager")]
+    
     [HttpPut("UpdateRoomPrice")]
     public IActionResult UpdateRoomPrice([FromQuery] string roomId, [FromQuery] decimal price)
     {
-        var success = _hotelManagementService.UpdateRoomPrice(roomId, price);
+        var success = hotelManagementService.UpdateRoomPrice(roomId, price);
         if (success)
             return Ok("Room price updated successfully.");
         else

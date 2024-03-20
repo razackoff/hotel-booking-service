@@ -6,19 +6,12 @@ namespace hotel_booking_service.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class HotelController : ControllerBase
+    public class HotelController(IHotelService hotelService) : ControllerBase
     {
-        private readonly IHotelService _hotelService;
-
-        public HotelController(IHotelService hotelService)
-        {
-            _hotelService = hotelService;
-        }
-
         [HttpGet("GetAllHotels")]
         public IActionResult GetAllHotels()
         {
-            var hotels = _hotelService.GetAllHotels();
+            var hotels = hotelService.GetAllHotels();
             if (hotels != null && hotels.Count > 0)
                 return Ok(hotels);
             else
@@ -29,7 +22,7 @@ namespace hotel_booking_service.Controllers
         public IActionResult GetHotel([FromQuery] string hotelId)
         {
             // Получаем информацию об отеле по его идентификатору с помощью сервиса
-            var hotel = _hotelService.GetHotelById(hotelId);
+            var hotel = hotelService.GetHotelById(hotelId);
 
             // Проверяем, был ли найден отель
             if (hotel == null)
@@ -44,7 +37,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("GetHotelsByName")]
         public IActionResult GetHotelsByName(string name)
         {
-            var hotels = _hotelService.GetHotelsByName(name);
+            var hotels = hotelService.GetHotelsByName(name);
             if (hotels != null && hotels.Count > 0)
                 return Ok(hotels);
             else
@@ -54,7 +47,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("GetHotelsContainingName")]
         public IActionResult GetHotelsContainingName(string name)
         {
-            var hotels = _hotelService.GetHotelsContainingName(name);
+            var hotels = hotelService.GetHotelsContainingName(name);
             if (hotels.Any())
             {
                 return Ok(hotels);
@@ -68,7 +61,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("GetAvailableRooms")]
         public IActionResult GetAvailableRooms([FromQuery] string hotelId)
         {
-            var availableRooms = _hotelService.GetAvailableRooms(hotelId);
+            var availableRooms = hotelService.GetAvailableRooms(hotelId);
             if (availableRooms != null)
                 return Ok(availableRooms);
             else
@@ -79,7 +72,7 @@ namespace hotel_booking_service.Controllers
         [HttpGet("Bookings")]
         public IActionResult GetBookings([FromQuery] string userId)
         {
-            var bookings = _hotelService.GetBookings(userId);
+            var bookings = hotelService.GetBookings(userId);
             return Ok(bookings);
         }
         
@@ -87,7 +80,7 @@ namespace hotel_booking_service.Controllers
         [HttpPost("FindAvailableRooms")]
         public IActionResult SearchHotels([FromBody] SearchCriteria criteria)
         {
-            var rooms = _hotelService.FindAvailableRooms(criteria);
+            var rooms = hotelService.FindAvailableRooms(criteria);
             return Ok(rooms);
         }
         
@@ -95,7 +88,7 @@ namespace hotel_booking_service.Controllers
         [HttpPost("Book")]
         public IActionResult BookRoom(RoomBookingInfo bookingInfo)
         {
-            var success = _hotelService.BookRoom(bookingInfo);
+            var success = hotelService.BookRoom(bookingInfo);
             if (success)
                 return Ok("Room booked successfully.");
             else
@@ -106,7 +99,7 @@ namespace hotel_booking_service.Controllers
         [HttpDelete("Cancel")]
         public IActionResult CancelBooking([FromQuery] string bookingId)
         {
-            var success = _hotelService.CancelBooking(bookingId);
+            var success = hotelService.CancelBooking(bookingId);
             if (success)
                 return Ok("Booking canceled successfully.");
             else
