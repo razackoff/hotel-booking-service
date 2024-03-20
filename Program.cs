@@ -2,6 +2,7 @@ using System.Text;
 using hotel_booking_service.Data;
 using hotel_booking_service.Repositories;
 using hotel_booking_service.Services;
+using hotel_booking_service.Services.Internal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

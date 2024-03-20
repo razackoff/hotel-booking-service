@@ -1,9 +1,8 @@
 using hotel_booking_service.Models;
 using hotel_booking_service.Repositories;
 using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-namespace hotel_booking_service.Services;
+namespace hotel_booking_service.Services.Internal;
 
 public class HotelManagementService : IHotelManagementService
     {

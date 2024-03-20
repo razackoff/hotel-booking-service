@@ -1,6 +1,6 @@
 using hotel_booking_service.DTOs;
 using hotel_booking_service.Models;
-using hotel_booking_service.Services;
+using hotel_booking_service.Services.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hotel_booking_service.Controllers;

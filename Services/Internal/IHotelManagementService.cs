@@ -1,7 +1,6 @@
-using hotel_booking_service.DTOs;
 using hotel_booking_service.Models;
 
-namespace hotel_booking_service.Services;
+namespace hotel_booking_service.Services.Internal;
 
 public interface IHotelManagementService
 {

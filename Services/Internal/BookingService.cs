@@ -1,7 +1,7 @@
 using hotel_booking_service.Models;
 using hotel_booking_service.Repositories;
 
-namespace hotel_booking_service.Services;
+namespace hotel_booking_service.Services.Internal;
 
 public class BookingService : IBookingService
 {
