@@ -3,18 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace hotel_booking_service.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options,
+    DbSet<Hotel> hotels,
+    DbSet<Room> rooms,
+    DbSet<Booking> bookings)
+    : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
-    public DbSet<Hotel> Hotels { get; set; }
-    public DbSet<Room> Rooms { get; set; }
-    public DbSet<Booking> Bookings { get; set; }
-    //public DbSet<Payment> Payments { get; set; }
-
+    public DbSet<Hotel> Hotels { get; set; } = hotels;
+    public DbSet<Room> Rooms { get; set; } = rooms;
+    public DbSet<Booking> Bookings { get; set; } = bookings;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
